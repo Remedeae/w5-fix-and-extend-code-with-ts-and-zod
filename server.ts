@@ -10,48 +10,63 @@ let pastries = [
   {
     id: 1,
     name: "Semla",
-    category: ["bun", "seasonal", "filled"],
+    price: {
+      price: 35,
+      currency: "sek",
+    },
   },
   {
     id: 2,
     name: "Chokladboll",
+    price: {
+      price: 20,
+    },
   },
   {
     id: 3,
     name: "Prinsesstårta",
-    category: ["cake", "filled"],
+    price: {
+      price: 89,
+      currency: "sek",
+    },
   },
 ];
 
 const PastrySchema = z.object({
-  id: z.number(),
+  id: z.number().min(1),
   name: z.string(),
-  category: z.array(z.string()).optional(),
+  price: z.object({
+    price: z.number().positive(),
+    currency: z.string().optional().default("sek"),
+  }),
 });
 const PastriesSchema = z.array(PastrySchema);
 
 app.get("/selection", (req, res) => {
   const validatePastires = PastriesSchema.safeParse(pastries);
   if (!validatePastires.success) {
-    return res.json({ error: validatePastires.error });
+    return res.status(500).json({ error: validatePastires.error });
   }
-  res.json({ pastries });
+  res.json({ message: validatePastires.data });
 });
 
 app.post("/selection", (req, res) => {
   const newPastry = {
     id: pastries.length + 1,
     name: req.body.name,
-    category: req.body.category,
+    price: {
+      price: req.body.price.price,
+      currency: req.body.price.currency,
+    },
   };
   const validatePastry = PastrySchema.safeParse(newPastry);
   if (!validatePastry.success) {
-    return res.status(400).json({ error: validatePastry.error });
+    return res.status(500).json({ error: validatePastry.error });
   }
-  pastries.push(newPastry);
+  pastries.push(validatePastry.data);
   res
     .status(201)
-    .json({ message: "Entry successfull added!", pastry: newPastry });
+    .json({ message: "Entry successfull added!", pastry: validatePastry.data });
 });
 
 app.delete("/selection/:id", (req, res) => {
@@ -60,7 +75,7 @@ app.delete("/selection/:id", (req, res) => {
     return res.status(404).json({ Error: "Entry not found." });
   }
   pastries = pastries.filter((p) => p.id !== pastryId);
-  res.json({ Message: "Entry successfully deleted!" });
+  res.status(201).json({ Message: "Entry successfully deleted!" });
 });
 
 app.put("/selection/:id", (req, res) => {
@@ -72,16 +87,19 @@ app.put("/selection/:id", (req, res) => {
   const updateInput = {
     id: pastryId,
     name: req.body.name || pastry.name,
-    category: req.body.category || pastry.category,
+    price: {
+      price: req.body.price.price || pastry.price.price,
+      currency: req.body.price.currency || pastry.price.currency,
+    },
   };
   const validateUpdate = PastrySchema.safeParse(updateInput);
   if (!validateUpdate.success) {
     return res
-      .status(400)
+      .status(500)
       .json({ message: "Invalid input.", error: validateUpdate.error });
   }
-  pastry.name = updateInput.name;
-  pastry.category = updateInput.category;
+  pastry.name = validateUpdate.data.name;
+  pastry.price = validateUpdate.data.price;
   res
     .status(201)
     .json({ message: "Entry successfully updated", update: pastry });
