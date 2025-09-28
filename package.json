@@ -1,0 +1,34 @@
+{
+  "name": "assasment-ts-zod-code-fix",
+  "version": "1.0.0",
+  "description": "��#\u0000W\u0000e\u0000e\u0000k\u0000 \u00005\u0000 \u0000A\u0000s\u0000s\u0000a\u0000s\u0000m\u0000e\u0000n\u0000t\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Remedeae/w5-fix-and-extend-code-with-ts-and-zod.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Remedeae/w5-fix-and-extend-code-with-ts-and-zod/issues"
+  },
+  "homepage": "https://github.com/Remedeae/w5-fix-and-extend-code-with-ts-and-zod#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "eslint": "^9.36.0",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.6.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2",
+    "zod": "^4.1.11"
+  }
+}
