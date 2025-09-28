@@ -23,15 +23,15 @@ let pastries = [
   },
 ];
 
-const pastrySchema = z.object({
+const PastrySchema = z.object({
   id: z.number(),
   name: z.string(),
   category: z.array(z.string()).optional(),
 });
-const pastriesSchema = z.array(pastrySchema);
+const PastriesSchema = z.array(PastrySchema);
 
 app.get("/selection", (req, res) => {
-  const validatePastires = pastriesSchema.safeParse(pastries);
+  const validatePastires = PastriesSchema.safeParse(pastries);
   if (!validatePastires.success) {
     return res.json({ error: validatePastires.error });
   }
@@ -44,7 +44,7 @@ app.post("/selection", (req, res) => {
     name: req.body.name,
     category: req.body.category,
   };
-  const validatePastry = pastrySchema.safeParse(newPastry);
+  const validatePastry = PastrySchema.safeParse(newPastry);
   if (!validatePastry.success) {
     return res.status(400).json({ error: validatePastry.error });
   }
@@ -74,7 +74,7 @@ app.put("/selection/:id", (req, res) => {
     name: req.body.name || pastry.name,
     category: req.body.category || pastry.category,
   };
-  const validateUpdate = pastrySchema.safeParse(updateInput);
+  const validateUpdate = PastrySchema.safeParse(updateInput);
   if (!validateUpdate.success) {
     return res
       .status(400)
